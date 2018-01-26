@@ -1,0 +1,204 @@
+一.MongoDB 数据 查询
+1.按条件查询记录：db.getCollection('表名').find({'字段名' : 字段值})
+
+ 
+
+2.按条件查询记录数量：db.getCollection('表名').find({'字段名' : 字段值}).count()
+
+ 
+
+3.按照模糊条件查询记录数量：db.getCollection('表名').find({'字段名' : { '$regex' : '前部分内容.*' }}).count()
+
+ 
+
+4.查询所有记录数量：db.getCollection('表名').find({}).count()
+ 
+
+5.排重查询 db.getCollection('表名').distinct("字段名")
+ 
+
+6.对查询结果排序 db.getCollection('TaskItem').find({}).sort({CreateTime:-1})   -1 降序，1 升序
+7. 查询操作符
+比较操作符"$gt" 、"$gte"、 "$lt"、 "$lte"、''$ne''(分别对应">"、 ">=" 、"<" 、"<="、''!='')，组合起来进行范围的查找
+示例：db.getCollection('xx').find({"ValidEnd":{"$gt":new Date()}})
+ 
+ 
+
+二.MongoDB 数据导出mongoexport
+1.概述
+ mongoexport命令行用于数据的导出，默认导出的文件格式为JSON格式。当然也可以指定特定的文件格式。
+
+2.语法
+说明：
+
+-h：数据库宿主机的IP
+
+-u：数据库用户名
+
+-p：数据库密码
+
+-d：数据库名字
+
+-c：集合的名字
+
+-f：导出的列名
+
+-q：导出数据的过滤条件
+
+--csv：导出格式为csv
+
+3.按字段导出数据步骤：
+->首先要安装mongo的服务端
+
+->然后在PC的运行中输入cmd
+
+->进入mongo的安装文件路径下C:\Program Files\MongoDB\Server\3.0\bin
+
+->运行命令 mongoexport -h localhost:27001    -d库名  -c 表名 -f 字段名1,字段名2 --csv -o 路径/a.csv  
+
+
+4.按特定字段值导出数据语句：
+例如：mongoexport -h xxx.xxx.xxx.xxx --port 27017 -d YmatouSocial -c Ymt_Social -q "{Content:{$regex:'sososo good very beautiful.*'}}" --type=csv -f NoteId,UserId -o test.dat
+
+
+导出uid和token
+
+5:按特定字段值导出数据（限制条数）语句
+例如：mongoexport -h xxx.xxx.xxx.xxx --port 27017 -d db -c c --limit 1  --type=csv -f NoteId,UserId -o test.dat
+
+
+mongoexport -h xxxxxxxxxxxx --port 27017 -u u -p p -d db -c c --limit 1 --type=csv -f sId,uId -o E:\t.csv
+
+ 
+
+三.MongoDB 删除记录——linux命令
+1.删除数据库数据步骤：
+->登陆linux
+
+->输入mongo
+
+->输入show dbs
+
+->输入use 数据库
+
+->输入show tables
+
+->输入命令：db.c.remove({'Content' : { '$regex' : 'baby control the city ok.*' }})
+
+
+
+四.循环插入数据demo
+for (var i = 90000000; i <= 90000010; i++) db.getCollection('c').save({"_id" : "3e30000132514a4b99e4434"+i,"tId" : "635f05c1469b408d9909880"+i,"sId" : "xxxxxxx","uId" : "9"+i,"eTtime" : ISODate("2015-03-19T04:37:19.983Z"),"cTime" :new Date(),"tSource" : "app","tContext" : "reg"});
+
+ 
+
+
+五.json格式查询mongo服务状态
+mongostat -h localhost --discover --json
+
+六.killop
+ var mo=db.currentOP().inprog[0];db.killOP(mo.opid)
+ 
+
+ 
+
+指定某个值的数据类型
+
+db.addressBook.insertMany(
+   [
+      { "_id" : 1, address : "2030 Martian Way", zipCode : "90698345" },
+      { "_id" : 2, address: "156 Lunar Place", zipCode : 43339374 },
+      { "_id" : 3, address : "2324 Pluto Place", zipCode: NumberLong(3921412) },
+      { "_id" : 4, address : "55 Saturn Ring" , zipCode : NumberInt(88602117) }
+   ]
+)
+
+mongostat -usa --authenticationDatabase admin 
+ 
+mongo迁库：
+
+首先登入主库，然后执行从目标机copy
+
+ db.copyDatabase("db","c","host:27017","user","pwd","MONGODB-CR")
+然后创建账号
+use Ymt_Auth_201406
+db.createUser( { "user" : "user","pwd":"pwd","roles":[{role:"readWrite",db:"db"}]},{ w: "majority" , wtimeout: 5000 } ) 
+
+
+
+mongostat监控mongodb当前状态下的运行情况（使用mongo自带的监控工具mongostat）
+
+mongostat -usa   --authenticationDatabase admin
+每个字段的含义：
+ 
+insert 每秒instert操作次数
+query 每秒query操作次数
+update 每秒update操作次数
+delete 每秒delete操作次数
+getmore每秒getmore操作次数
+command每秒command执行次数
+flushes每秒执行fsync将数据写入硬盘的次数
+vsize 虚拟内存使用量，单位是MB
+res 物理内存使用量，单位MB
+qr|qw 队列中waiting的读/写次数
+ar|aw 已激活active的读/写次数
+netIn 接收端网络速率，单位是bytes
+netOut发送端网络速率，单位是bytes
+conn 连接数(open connections)
+set 复制集(replica set)名称
+repl 成员在复制集中的状态(PRI|SEC|ARB|REC)
+
+mongotop -usa   --authenticationDatabase admin
+
+
+
+mongo -usa  -p --authenticationDatabase admin
+
+第二步，查看数据库：
+show dbs
+第三步，使用数据库：
+use  dbname
+第四步，如果不是主库则需要增加执行权限：
+rs.slaveOk()  
+第五步，开启profiling
+db.getProfilingLevel();
+查看当前的级别
+
+db.getProfilingStatus();
+查看级别和时间
+
+db.setProfilingLevel(2);  
+（0） 关闭 ，不收集任何数据；（1）收集慢查询数据，默认是100毫秒；（2）  收集所有数据；
+
+db.setProfilingLevel(1,20);
+（1,20） 代表纪录20ms以上的操作
+
+第六步，关闭Profiling 
+db.setProfilingLevel(0);
+第七步，查看当前system.profile监控的慢查询语句
+ 
+db.system.profile.find().sort({"ts":-1}).limit(1).pretty()
+这是查看慢查询语句的日常使用命令，按照时间排过序的，并且取一条
+{"ts":-1}   ：代表按照时间 倒序排列s
+.pretty()：将格式转换成纵行排列。看起来更直观。
+
+主要关注的点： "op":#操作类型，有insert、query、update、remove、getmore、command
+                           "ns" :#操作的集合
+
+                            "millis":#执行语句消耗的时间
+
+                            "client"#操作语句的ip
+如果只查看query的筛选方法如下：
+ 
+ db.system.profile.find({"op":"query"})
+
+查看mongo的执行计划
+db.表.explain('executionStats').find({字段1:值1,字段2:值2})
+
+mongodb索引操作
+查询索引：db.表名 .getIndexes() ;
+创建索引：db.表名..ensureIndex({"字段":1});
+删除索引：db.表名 .dropIndex()
+创建复合索引：db.表名.ensureIndex({"co1":1,"co2":1})
+删除复合索引：db.表名.dropIndex({"co1":1,"co2":1})
+查询符合索引：db.Ymt_Page.getIndexes("复合索引名称")

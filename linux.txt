@@ -1,0 +1,10 @@
+统计系统tcp连接 time_wait 状态的数量
+
+netstat -an |find /i "time_wait" /c
+
+磁盘读写过高
+linux：运行iostat -x 1检查await列。如果该列在负载下持续超过10(ms)，那么说明磁盘太慢或是磁盘过载。
+
+监控命令
+dstat 
+perf top

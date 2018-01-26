@@ -1,0 +1,203 @@
+
+mysql性能
+阻塞
+select r.trx_id waiting_trx_id, r.trx_mysql_thread_Id waiting_thread,
+       r.trx_query waiting_query, b.trx_id blocking_trx_id,
+       b.trx_mysql_thread_id blocking_thread, b.trx_query blocking_query
+from information_schema.innodb_lock_waits w 
+inner join information_schema.innodb_trx b 
+         on b.trx_id = w.blocking_trx_id
+inner join information_schema.innodb_trx r 
+         on r.trx_id = w.requesting_trx_id;
+
+锁
+SELECT a.*
+FROM information_schema.`INNODB_LOCKS`  a
+JOIN information_schema.`INNODB_LOCK_WAITS` b
+ON a.lock_trx_id=b.blocking_trx_id
+
+
+查询进程
+SELECT *
+FROM information_schema.`PROCESSLIST`
+WHERE info IS NOT NULL  
+
+慢查询
+SELECT *
+FROM mysql.`slow_log`
+ORDER BY start_time DESC
+LIMIT 100
+
+
+mssql
+查询存储过程
+SELECT ROUTINE_NAME, ROUTINE_DEFINITION 
+FROM INFORMATION_SCHEMA.ROUTINES 
+WHERE ROUTINE_DEFINITION LIKE '%sp_name%' 
+AND ROUTINE_TYPE='PROCEDURE'
+
+
+批量插入
+DECLARE @count INTEGER
+DECLARE @index INTEGER
+SET @count=100000
+SET @index=10000
+
+WHILE @index<@count
+BEGIN
+INSERT INTO tablename (c1,c2,c3,c4)
+VALUES ('2',@index,'D42D590E-A30F-4DED-BD16-985BE83A4C6B','2015-11-15 17:37:16.617')
+
+SET @index=@index+1
+END
+GO
+
+
+
+sql授权
+GRANT SELECT,UPDATE,INSERT,EXECUTE ON db.* TO user@'%' IDENTIFIED BY 'pwd';
+
+FLUSH PRIVILEGES;
+
+十六进制转换64int
+1.select Cast(字段名  as bigint) from 表名
+
+例如：select Cast(dataversion  as bigint) from Bill
+
+
+
+查看系统日志
+select * from sys.traces 
+ 
+查看sql profile转储文件
+先要用sql profile监控数据库,导出成trc
+拷贝至数据库服务器上，eg.d:\sqldata\trace\201611290881.trc
+sql查询中如下语句查看
+--SELECT cpu,TextData,Reads,Writes 
+SELECT *
+FROM ::fn_trace_gettable('d:\sqldata\trace\201611290881.trc',default) 
+WHERE SPID > 50 
+and StartTime > '2016-11-29 11:30:00.000'
+AND cpu > 100
+ORDER BY cpu DESC
+--查看trace文件里内容
+select *
+from fn_trace_gettable('C:\a.trc',0)
+where  HostName='SIT1_WIN_API'
+order by reads desc
+ 
+执行统计功能
+打开统计功能 set statistics io on 
+执行具体sql语句
+消息中可以看到具体执行情况
+
+查看正在执行的SQL及执行计划
+SELECT  s .[session_id] ,
+        r.[start_time] ,
+        DATEDIFF(s , r .start_time, GETDATE()) AS elapsed_MS ,
+        r.[status] AS RequestStatus ,
+        DB_NAME(r .database_id) AS DatabaseName ,
+        r.[wait_type] ,
+        r.[wait_resource] ,
+        r.[wait_time] ,
+        r.[reads] ,
+        r.[writes] ,
+        r.[sql_handle] ,
+        r.[logical_reads] ,
+        s.[status] AS SessionStatus ,
+        s.[host_name] ,
+        s.[original_login_name] ,
+        s.[nt_user_name] ,
+        s.[program_name] ,
+        s.[client_interface_name] ,
+        c.[client_net_address] ,
+        SUBSTRING(qt .text, r. statement_start_offset / 2,
+                  ( CASE WHEN r.statement_end_offset = -1
+                         THEN LEN (CONVERT( NVARCHAR(MAX ), qt .text)) * 2
+                         ELSE r .statement_end_offset
+                    END - r. statement_start_offset ) / 2 ) AS ExecutingSQL ,
+        qp.query_plan
+FROM    sys .dm_exec_requests r
+        INNER JOIN sys. dm_exec_sessions s ON r.session_id = s.session_id
+        LEFT JOIN sys. dm_exec_connections c ON c.session_id = s.session_id
+        CROSS APPLY sys. dm_exec_sql_text(r .sql_handle) AS qt
+        CROSS APPLY sys. dm_exec_query_plan(r .plan_handle) AS qp
+ORDER BY elapsed_MS DESC
+
+查看阻塞
+
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+
+SELECT
+
+Waits.wait_duration_ms / 1000 AS WaitInSeconds
+
+, Blocking .session_id as BlockingSessionId
+
+, DB_NAME (Blocked. database_id) AS DatabaseName
+
+, Sess .login_name AS BlockingUser
+
+, Sess .host_name AS BlockingLocation
+
+, BlockingSQL .text AS BlockingSQL
+
+, Blocked .session_id AS BlockedSessionId
+
+, BlockedSess .login_name AS BlockedUser
+
+, BlockedSess .host_name AS BlockedLocation
+
+, BlockedSQL .text AS BlockedSQL
+
+, SUBSTRING (BlockedSQL .text, (BlockedReq .statement_start_offset/ 2) + 1,
+
+((CASE WHEN BlockedReq .statement_end_offset = - 1
+
+THEN LEN (CONVERT( NVARCHAR(MAX ), BlockedSQL .text)) * 2
+
+ELSE BlockedReq .statement_end_offset
+
+END - BlockedReq. statement_start_offset)/2 ) + 1)
+
+AS [Blocked Individual Query]
+
+, Waits .wait_type
+
+FROM sys .dm_exec_connections AS Blocking                          
+
+INNER JOIN sys. dm_exec_requests AS Blocked
+
+ON Blocking .session_id = Blocked .blocking_session_id
+
+INNER JOIN sys. dm_exec_sessions Sess
+
+ON Blocking .session_id = sess .session_id 
+
+INNER JOIN sys. dm_tran_session_transactions st
+
+ON Blocking .session_id = st .session_id
+
+LEFT OUTER JOIN sys.dm_exec_requests er
+
+ON st .session_id = er .session_id
+
+AND er .session_id IS NULL
+
+INNER JOIN sys. dm_os_waiting_tasks AS Waits
+
+ON Blocked .session_id = Waits .session_id
+
+CROSS APPLY sys. dm_exec_sql_text(Blocking .most_recent_sql_handle) AS BlockingSQL
+
+INNER JOIN sys. dm_exec_requests AS BlockedReq                    
+
+ON Waits .session_id = BlockedReq .session_id
+
+INNER JOIN sys. dm_exec_sessions AS BlockedSess
+
+ON Waits .session_id = BlockedSess .session_id
+
+CROSS APPLY sys. dm_exec_sql_text(Blocked .sql_handle) AS BlockedSQL
+
+ORDER BY WaitInSeconds
