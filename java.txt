@@ -1,0 +1,33 @@
+java启动脚本添加参数
+-Dcom.sun.management.jmxremote=true -Djava.rmi.server.hostname=localhost -Dcom.sun.management.jmxremote.port=6666 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.managementote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -XX:+UnlockCommercialFeatures -XX:+FlightRecorder
+使用jmc链接 localhost:6666监控虚拟机
+
+
+mysql性能
+阻塞
+select r.trx_id waiting_trx_id, r.trx_mysql_thread_Id waiting_thread,
+       r.trx_query waiting_query, b.trx_id blocking_trx_id,
+       b.trx_mysql_thread_id blocking_thread, b.trx_query blocking_query
+from information_schema.innodb_lock_waits w 
+inner join information_schema.innodb_trx b 
+         on b.trx_id = w.blocking_trx_id
+inner join information_schema.innodb_trx r 
+         on r.trx_id = w.requesting_trx_id;
+
+锁
+SELECT a.*
+FROM information_schema.`INNODB_LOCKS`  a
+JOIN information_schema.`INNODB_LOCK_WAITS` b
+ON a.lock_trx_id=b.blocking_trx_id
+
+
+查询进程
+SELECT *
+FROM information_schema.`PROCESSLIST`
+WHERE info IS NOT NULL  
+
+慢查询
+SELECT *
+FROM mysql.`slow_log`
+ORDER BY start_time DESC
+LIMIT 100
