@@ -58,7 +58,7 @@
 
 
 4.按特定字段值导出数据语句：
-例如：mongoexport -h xxx.xxx.xxx.xxx --port 27017 -d YmatouSocial -c Ymt_Social -q "{Content:{$regex:'sososo good very beautiful.*'}}" --type=csv -f NoteId,UserId -o test.dat
+例如：mongoexport -h xxx.xxx.xxx.xxx --port 27017 -d db -c c -q "{Content:{$regex:'sososo good very beautiful.*'}}" --type=csv -f NoteId,UserId -o test.dat
 
 
 导出uid和token
@@ -121,7 +121,7 @@ mongo迁库：
 
  db.copyDatabase("db","c","host:27017","user","pwd","MONGODB-CR")
 然后创建账号
-use Ymt_Auth_201406
+use dbname
 db.createUser( { "user" : "user","pwd":"pwd","roles":[{role:"readWrite",db:"db"}]},{ w: "majority" , wtimeout: 5000 } ) 
 
 
@@ -201,4 +201,4 @@ mongodb索引操作
 删除索引：db.表名 .dropIndex()
 创建复合索引：db.表名.ensureIndex({"co1":1,"co2":1})
 删除复合索引：db.表名.dropIndex({"co1":1,"co2":1})
-查询符合索引：db.Ymt_Page.getIndexes("复合索引名称")
+查询符合索引：db.table.getIndexes("复合索引名称")

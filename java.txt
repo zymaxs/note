@@ -2,3 +2,15 @@ java启动脚本添加参数
 -Dcom.sun.management.jmxremote=true -Djava.rmi.server.hostname=localhost -Dcom.sun.management.jmxremote.port=6666 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.managementote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -XX:+UnlockCommercialFeatures -XX:+FlightRecorder
 使用jmc链接 localhost:6666监控虚拟机
 
+启动参数
+JAVA_OPTS=" -server \
+            -Xms1024m -Xmx1024m \----堆的大小
+            -XX:MaxMetaspaceSize=512m \--非堆的最大值
+            -Xmn500M \ ----新生代的大小
+            -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled \
+            -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=75 \
+            -XX:+ScavengeBeforeFullGC -XX:+CMSScavengeBeforeRemark \
+            -XX:+PrintGCDateStamps -verbose:gc -XX:+PrintGCDetails -Xloggc:/usr/local/log/${APP_NAME}/gc.log \ -------打印GC的时间点，gc详情，gc的log。
+            -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M \
+            -Dsun.net.inetaddr.ttl=60 \
+            -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/local/log/${APP_NAME}/heapdump.hprof"

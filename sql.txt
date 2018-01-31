@@ -58,6 +58,10 @@ sql授权
 GRANT SELECT,UPDATE,INSERT,EXECUTE ON db.* TO user@'%' IDENTIFIED BY 'pwd';
 
 FLUSH PRIVILEGES;
+取消授权
+REVOKE SHOW VIEW  ON `db`.* FROM 'user'@'%';
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR 'user'@'%';
 
 十六进制转换64int
 1.select Cast(字段名  as bigint) from 表名

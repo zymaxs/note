@@ -8,3 +8,122 @@ linux£ºÔËĞĞiostat -x 1¼ì²éawaitÁĞ¡£Èç¹û¸ÃÁĞÔÚ¸ºÔØÏÂ³ÖĞø³¬¹ı10(ms)£¬ÄÇÃ´ËµÃ÷´ÅÅÌÌ
 ¼à¿ØÃüÁî
 dstat 
 perf top
+
+cd /;du -sh *  ´Ó¸ùÂ·¾¶²é¿´Ó²ÅÌÕ¼ÓÃÇé¿ö
+du -sh *  ²é¿´µ±Ç°Â·¾¶Ó²ÅÌÕ¼ÓÃÇé¿ö
+du --max-depth=1 -ah ²éÑ¯´óÎÄ¼ş
+
+netstat -lnp | grep 20880  ¸ù¾İ¶Ë¿ÚºÅ²é½ø³Ì
+
+ntpdate s2m.time.edu.cn
+
+nginx¶¨ÖÆÈÕÖ¾
+nginx.conf
+log_format lvan '$remote_addr - $remote_user [$time_iso8601] "$request" $http_host '
+'$status $body_bytes_sent "$http_referer" '
+'"$http_user_agent" $http_x_forwarded_for '
+'"$upstream_addr" $upstream_status "$upstream_cache_status" "$upstream_http_content_type" $upstream_response_time "$request_time" $request_length $bytes_sent $server_name';
+
+
+
+Deploy.sh ·¢²¼½Å±¾
+
+IP=$1
+
+echo "put tar to "${IP}
+ftp -n<<!
+open ${IP}
+user uname pwd
+binary
+prompt
+put test.jar
+put restart.sh
+close
+bye
+!
+
+Ìæ»»ÎÄ±¾
+find . *.xml|grep config.xml|xargs sed -i "s/ip:port/172.16.1.1:8080/g" 
+
+cpuĞÔÄÜ
+/proc/stat
+user (38082)    ´ÓÏµÍ³Æô¶¯¿ªÊ¼ÀÛ¼Æµ½µ±Ç°Ê±¿Ì£¬´¦ÓÚÓÃ»§Ì¬µÄÔËĞĞÊ±¼ä£¬²»°üº¬ niceÖµÎª¸º½ø³Ì¡£
+nice (627)      ´ÓÏµÍ³Æô¶¯¿ªÊ¼ÀÛ¼Æµ½µ±Ç°Ê±¿Ì£¬niceÖµÎª¸ºµÄ½ø³ÌËùÕ¼ÓÃµÄCPUÊ±¼ä
+system (27594)  ´ÓÏµÍ³Æô¶¯¿ªÊ¼ÀÛ¼Æµ½µ±Ç°Ê±¿Ì£¬´¦ÓÚºËĞÄÌ¬µÄÔËĞĞÊ±¼ä
+idle (893908)   ´ÓÏµÍ³Æô¶¯¿ªÊ¼ÀÛ¼Æµ½µ±Ç°Ê±¿Ì£¬³ıIOµÈ´ıÊ±¼äÒÔÍâµÄÆäËüµÈ´ıÊ±¼ä(¿ÕÏĞÊ±¼ä)
+iowait (12256) ´ÓÏµÍ³Æô¶¯¿ªÊ¼ÀÛ¼Æµ½µ±Ç°Ê±¿Ì£¬IOµÈ´ıÊ±¼ä(since 2.5.41)
+irq (581)           ´ÓÏµÍ³Æô¶¯¿ªÊ¼ÀÛ¼Æµ½µ±Ç°Ê±¿Ì£¬Ó²ÖĞ¶ÏÊ±¼ä(since 2.6.0-test4)
+softirq (895)      ´ÓÏµÍ³Æô¶¯¿ªÊ¼ÀÛ¼Æµ½µ±Ç°Ê±¿Ì£¬ÈíÖĞ¶ÏÊ±¼ä(since 2.6.0-test4)
+stealstolen(0) which is the time spent in other operating systems when running in a virtualized environment(since 2.6.11)
+guest(0)  which is the time spent running a virtual  CPU  for  guest operating systems under the control of the Linux kernel(since 2.6.24)
+
+ioĞÔÄÜ
+/proc/diskstats (0¿ªÊ¼6¶Á10Ğ´)
+Ç°3¸öÇøÓòÃèÊöÉè±¸
+µÚ1¸öÓò£º¶Á´ÅÅÌµÄ´ÎÊı£¬³É¹¦Íê³É¶ÁµÄ×Ü´ÎÊı£»
+
+µÚ2¸öÓò£ººÏ²¢¶Á´ÎÊı£»
+
+µÚ3¸öÓò£º¶ÁÉÈÇøµÄ´ÎÊı£¬³É¹¦¶Á¹ıµÄÉÈÇø×Ü´ÎÊı£»
+
+µÚ4¸öÓò£º¶Á»¨·ÑµÄºÁÃëÊı£¬ÕâÊÇËùÓĞ¶Á²Ù×÷Ëù»¨·ÑµÄºÁÃëÊı£»//»ù×¼
+
+µÚ5¸öÓò£ºĞ´Íê³ÉµÄ´ÎÊı£¬³É¹¦Ğ´Íê³ÉµÄ×Ü´ÎÊı£»
+
+µÚ6¸öÓò£ººÏ²¢Ğ´´ÎÊı£¬ÎªÁËĞ§ÂÊ¿ÉÄÜ»áºÏ²¢ÏàÁÚµÄ¶ÁºÍĞ´¡£´Ó¶øÁ½´Î4KµÄ¶ÁÔÚËü×îÖÕ±»´¦Àíµ½´ÅÅÌÉÏÖ®Ç°¿ÉÄÜ»á±ä³ÉÒ»´Î8KµÄ¶Á£¬²Å±»¼ÆÊı£¨ºÍÅÅ¶Ó£©£¬Òò´ËÖ»ÓĞÒ»´ÎI/O²Ù×÷£¬Õâ¸öÓòÊ¹ÄãÖªµÀÕâÑùµÄ²Ù×÷ÓĞ¶àÆµ·±£»
+
+µÚ7¸öÓò£ºĞ´ÉÈÇøµÄ´ÎÊı£¬³É¹¦Ğ´ÉÈÇø×Ü´ÎÊı£»
+
+µÚ8¸öÓò£ºĞ´»¨·ÑµÄºÁÃëÊı£¬ÕâÊÇËùÓĞĞ´²Ù×÷Ëù»¨·ÑµÄºÁÃëÊı£»//»ù×¼
+
+µÚ9¸öÓò£ºI/OµÄµ±Ç°½ø¶È£¬Ö»ÓĞÕâ¸öÓòÓ¦¸ÃÊÇ0¡£µ±ÇëÇó±»½»¸øÊÊµ±µÄrequest_queue_tÊ±Ôö¼ÓºÍÇëÇóÍê³ÉÊ±¼õĞ¡£»
+
+µÚ10¸öÓò£º»¨ÔÚI/O²Ù×÷ÉÏµÄºÁÃëÊı£¬Õâ¸öÓò»áÔö³¤Ö»Òªfield 9²»Îª0£»
+
+µÚ11¸öÓò£º¼ÓÈ¨£¬»¨ÔÚI/O²Ù×÷ÉÏµÄºÁÃëÊı£¬ÔÚÃ¿´ÎI/O¿ªÊ¼£¬I/O½áÊø£¬I/OºÏ²¢Ê±Õâ¸öÓò¶¼»áÔö¼Ó¡£Õâ¿ÉÒÔ¸øI/OÍê³ÉÊ±¼äºÍ´æ´¢ÄÇĞ©¿ÉÒÔÀÛ»ıµÄÌá¹©Ò»¸ö±ãÀûµÄ²âÁ¿±ê×¼¡£
+
+
+ÄÚ´æ
+/proc/meminfo
+MemTotal:        2052440 kB //×ÜÄÚ´æ
+MemFree:           50004 kB //¿ÕÏĞÄÚ´æ
+Buffers:           19976 kB //¸øÎÄ¼şµÄ»º³å´óĞ¡
+Cached:           436412 kB //¸ßËÙ»º³å´æ´¢Æ÷(http://baike.baidu.com/view/496990.htm)Ê¹ÓÃµÄ´óĞ¡
+SwapCached:        19864 kB //±»¸ßËÙ»º³å´æ´¢ÓÃµÄ½»»»¿Õ¼ä´óĞ¡
+Active:          1144512 kB //»îÔ¾Ê¹ÓÃÖĞµÄ¸ßËÙ»º³å´æ´¢Æ÷Ò³ÃæÎÄ¼ş´óĞ¡
+Inactive:         732788 kB //²»¾­³£Ê¹ÓÃµÄ¸ßËÙ»º³å´æ´¢Æ÷Ò³ÃæÎÄ¼ş´óĞ¡
+Active(anon):     987640 kB //anon£º²»¾Ã
+Inactive(anon):   572512 kB
+Active(file):     156872 kB
+Inactive(file):   160276 kB
+Unevictable:           8 kB
+Mlocked:               8 kB
+HighTotal:       1177160 kB //The total and free amount of memory, in kilobytes, that is not directly mapped into kernel space.
+HighFree:           7396 kB // The HighTotal value can vary based on the type of kernel used.
+LowTotal:         875280 kB // The total and free amount of memory, in kilobytes, that is directly mapped into kernel space.  used. 
+LowFree:           42608 kB //The LowTotal value can vary based on the type of kernel
+SwapTotal:        489940 kB //½»»»¿Õ¼ä×Ü´óĞ¡
+SwapFree:         450328 kB //¿ÕÏĞ½»»»¿Õ¼ä
+Dirty:               104 kB //µÈ´ı±»Ğ´»Øµ½´ÅÅÌµÄ´óĞ¡
+Writeback:             0 kB //ÕıÔÚ±»Ğ´»ØµÄ´óĞ¡
+AnonPages:       1408256 kB //Î´Ó³ÉäµÄÒ³µÄ´óĞ¡
+Mapped:           131964 kB //Éè±¸ºÍÎÄ¼şÓ³ÉäµÄ´óĞ¡
+Slab:              37368 kB //ÄÚºËÊı¾İ½á¹¹»º´æµÄ´óĞ¡£¬¿É¼õÉÙÉêÇëºÍÊÍ·ÅÄÚ´æ´øÀ´µÄÏûºÄ
+SReclaimable:      14164 kB //¿ÉÊÕ»ØslabµÄ´óĞ¡
+SUnreclaim:        23204 kB //²»¿ÉÊÕ»ØµÄslabµÄ´óĞ¡23204+14164=37368
+PageTables:        13308 kB //¹ÜÀíÄÚ´æ·ÖÒ³µÄË÷Òı±íµÄ´óĞ¡
+NFS_Unstable:          0 kB //²»ÎÈ¶¨Ò³±íµÄ´óĞ¡
+Bounce:                0 kB //bounce:ÍË»Ø
+WritebackTmp:          0 kB //
+CommitLimit:     1516160 kB
+Committed_AS:    2511900 kB
+VmallocTotal:     122880 kB //ĞéÄâÄÚ´æ´óĞ¡
+VmallocUsed:       28688 kB //ÒÑ¾­±»Ê¹ÓÃµÄĞéÄâÄÚ´æ´óĞ¡
+VmallocChunk:      92204 kB
+HugePages_Total:       0 //´óÒ³ÃæµÄ·ÖÅä
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       10232 kB
+DirectMap2M:      899072 kB
