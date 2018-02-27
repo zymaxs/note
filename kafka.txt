@@ -1,0 +1,12 @@
+﻿启动脚本
+nohup sh kafka-server-start.sh ../config/server.properties > kafka.log &
+
+ps auxww|grep ${path}|awk '{ print $2 }'|xargs kill -9
+sleep 3
+nohup sh zookeeper-server-start.sh ../config/zookeeper.properties > zk.log&
+
+注意版本兼容
+
+
+sh kafka-topics.sh --create --zookeeper ip:port --replication-factor 1 --partitions 1 --topic test 
+sh kafka-topics.sh --list --zookeeper ip:port
