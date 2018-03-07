@@ -1,0 +1,72 @@
+jenkins.sh
+
+. /etc/profile
+cd /opt/jenkins
+nohup java -jar jenkins.war > log.out&
+
+/etc/init.d/jenkins
+
+jenkinspath=/opt/jenkins
+
+if [ ! -d "$jenkinspath" ] ; then
+    echo "cannot find jenkins path"
+    exit 0
+fi
+
+if (($# != 1)); then
+    echo "Usage:$0 {start|stop|restart}"
+    exit 0
+fi
+
+case "$1" in
+  status)
+    status=`ps -ef |grep -v grep |grep jenkins.war |wc -l`
+    if(($status==1));then
+        echo "jenkins is running" /bin/true
+        exit 0
+    fi
+    if(($status==0));then
+        echo "jenkins is not running" /bin/false
+        exit 0
+    fi
+    ;;    
+  start)
+    status=`ps -ef |grep -v grep |grep jenkins.war |wc -l`
+    if(($status==1));then    
+        echo "jenkins has been started"
+        exit 0
+    fi    
+    sh $jenkinspath/jenkins.sh &
+    if(($status==1));then
+	echo "jenkins run" /bin/true
+    	exit 0
+    fi
+    echo "jenkins not run" /bin/false
+    exit 0
+    ;;
+  stop)
+    status=`ps -ef |grep -v grep |grep jenkins.war |wc -l`
+    if(($status==0));then
+        echo "jenkins has been stopped"
+        exit 0
+    fi
+    ps -ef |grep -v grep |grep jenkins.war |awk '{print $2}'|xargs kill -9
+    ;;
+  restart)
+    status=`ps -ef |grep -v grep |grep jenkins.war |wc -l`
+    if(($status==1));then
+                ps -ef |grep -v grep |grep jenkins |awk '{print $2}'|xargs kill -9
+    fi
+    sh $jenkinspath/jenkins.sh &
+    if(($status==1));then
+        echo "jenkins run" /bin/true
+        exit 0
+    fi
+    echo "jenkins not run" /bin/false
+    exit 0    
+    ;;
+  *)
+    echo "Usage:$0 {start|stop|restart}"
+    exit
+    ;;
+esac
