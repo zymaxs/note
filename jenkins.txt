@@ -70,3 +70,8 @@ case "$1" in
     exit
     ;;
 esac
+
+
+chmod u+x /etc/init.d/jenkins 
+chkconfig --add jenkins 
+chkconfig --level 2345 jenkins on
