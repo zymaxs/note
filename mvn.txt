@@ -1,0 +1,198 @@
+发布jar
+mvn deploy:deploy-file -DgroupId=gid -DartifactId=aid -Dversion=1.0 -Dpackaging=jar -Dfile=test.jar -Durl=http://ip/nexus/content/repositories/releases/ -DrepositoryId=snapshots
+
+mvn生成
+mvn archetype:generate
+mvn archetype:generate -DgroupId=gid -DartifactId=aid -Dversion=0.01-SNAPSHOT
+
+打包
+mvn package
+安装
+mvn clean install
+转eclipse
+mvn eclipse:eclipse
+jar包
+mvn jar:jar
+发布
+mvn deploy
+
+打印依赖
+mvn dependency:resolve
+mvn dependency:tree
+
+
+
+configfile / settings.xml
+<?xml version="1.0"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+<profiles>
+        <profile>
+                <id>nexus</id>
+                <repositories>
+                        <repository>
+                                <id>public</id>
+                                <name>Public Repositories</name>
+                                <url>http://ip/nexus/content/groups/public/</url>
+                                <releases>
+                                        <enabled>true</enabled>
+                                </releases>
+                                <snapshots>
+                                        <enabled>true</enabled>	
+                                </snapshots>
+                        </repository>
+                </repositories>
+                <pluginRepositories>
+                        <pluginRepository>
+                                <id>public</id>
+                                <name>Public Repositories</name>
+                                <url>http://ip/nexus/content/groups/public/</url>
+                                <releases>
+                                        <enabled>true</enabled>
+                                </releases>
+                                <snapshots>
+                                        <enabled>true</enabled>
+                                </snapshots>
+                        </pluginRepository>
+                </pluginRepositories>
+        </profile>
+</profiles>
+
+<servers>
+        <server> 
+            <id>releases</id> 
+            <username>uname</username> 
+            <password>pwd</password> 
+        </server> 
+        <server> 
+            <id>snapshots</id> 
+            <username>uname</username> 
+            <password>pwd</password> 
+        </server> 
+</servers>
+
+<activeProfiles>
+        <activeProfile>nexus</activeProfile>
+</activeProfiles>
+
+</settings>
+
+
+pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>gid</groupId>
+  <artifactId>aid</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>stress.web</name>
+  <url>http://maven.apache.org</url>
+        
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- spring版本号 -->
+        <spring.version>5.0.2.RELEASE</spring.version>
+        <!-- log4j日志文件管理包版本 -->
+        <!-- junit版本号 -->
+        <junit.version>4.10</junit.version>
+        <!-- mybatis版本号 -->
+        <mybatis.version>3.4.5</mybatis.version>
+  </properties>
+<!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
+
+  <dependencies>
+     <!-- 添加Spring依赖 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!--单元测试依赖 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!--spring单元测试依赖 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--mybatis依赖 -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+
+        <!-- mybatis/spring包 -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
+        <!-- mysql驱动包 -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.29</version>
+        </dependency>
+  </dependencies>
+  <modules>
+
+  <module>web</module>
+  <module>dao</module>
+  </modules>
+</project>
