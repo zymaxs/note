@@ -1,3 +1,6 @@
+查找n天前的并删除
+find . -mtime +5 -regex ".*com/[0-9]+" -exec rm -rf {} \;
+
 统计系统tcp连接 time_wait 状态的数量
 
 netstat -an |find /i "time_wait" /c
