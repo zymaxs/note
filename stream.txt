@@ -1,3 +1,9 @@
+tolist 
+List<String> names = rcata.getPropertyList().stream().map(CatalogPropertyDto::getName).collect(Collectors.toList());
+filter
+Stream<Map> hasStock = catalogsAry.stream().filter(mapper -> (Double.valueOf(mapper.get("stock").toString()) > 0));
+max(min)
+Double max = catalogsAry.stream().map(mapper -> Double.valueOf(mapper.get("price").toString())).max(Comparator.comparing(u -> u)).get();
 filter
 在前面的例子中我们已经演示了如何使用filter，其定义为：Stream<T> filter(Predicate<? super T> predicate)，filter接受一个谓词Predicate，我们可以通过这个谓词定义筛选条件，在介绍lambda表达式时我们介绍过Predicate是一个函数式接口，其包含一个test(T t)方法，该方法返回boolean。现在我们希望从集合students中筛选出所有武汉大学的学生，那么我们可以通过filter来实现，并将筛选操作作为参数传递给filter：
 
