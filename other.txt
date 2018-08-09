@@ -1,3 +1,5 @@
 同步时间服务
 net use \\172.16.3.1\ipc$ "pwd" /user:"uname"
 net time \\172.16.3.1 /set /y
+
+cd /SIT1/domain/ && ls -lt|awk '{ print $9 }'|grep ^G |tail -n +5|xargs rm -rf
