@@ -1,0 +1,19 @@
+tar -zxvf spark-2.3.1-bin-hadoop2.7.tgz
+vi /etc/profile
+export SPARK_HOME=/opt/spark-2.3.1-bin-hadoop2.7
+export PATH=$PATH:$SPARK_HOME/bin
+
+edit conf/spark-env.sh add
+SPARK_WORKER_OPTS="-Dspark.worker.cleanup.enabled=true -Dspark.worker.cleanup.appDataTtl=3600 "
+
+master
+SPARK_MASTER_HOST="ip "
+
+定期删除 spark-2.3.1-bin-hadoop2.7/work
+master
+sbin 
+sh start-master.sh
+
+slave
+sbin 
+sh start-slave.sh spark://ip:7077

@@ -1,0 +1,5 @@
+cat /etc/security/limits.conf
+ftpuser soft nproc 16384
+ftpuser hard nproc 16384
+ftpuser soft nofile 65536
+ftpuser hard nofile 65536
