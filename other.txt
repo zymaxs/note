@@ -3,3 +3,63 @@ net use \\172.16.3.1\ipc$ "pwd" /user:"uname"
 net time \\172.16.3.1 /set /y
 
 cd /SIT1/domain/ && ls -lt|awk '{ print $9 }'|grep ^G |tail -n +5|xargs rm -rf
+
+修改windows dns
+	 * @param ncname
+	 *            例如：本地连接
+	 * @param ip
+	 *            dns ip地址 172.16.110.240
+Runtime.getRuntime().exec("netsh interface ip set dns \"" + ncname + "\" static " + ip + " primary");
+
+Verify cardId
+public static String getVerify(String cardId) {
+		String[] ValCodeArr = { "1", "0", "x", "9", "8", "7", "6", "5", "4", "3", "2" };
+		String[] Wi = { "7", "9", "10", "5", "8", "4", "2", "1", "6", "3", "7", "9", "10", "5", "8", "4", "2" };
+		int TotalmulAiWi = 0;
+		for (int i = 0; i < 17; i++) {
+			TotalmulAiWi = TotalmulAiWi + Integer.parseInt(String.valueOf(cardId.charAt(i))) * Integer.parseInt(Wi[i]);
+		}
+		int modValue = TotalmulAiWi % 11;
+		String strVerifyCode = ValCodeArr[modValue];
+
+		return strVerifyCode;
+	}
+	获取ip
+	public static String getDnsIp(String domain) throws UnknownHostException{
+    	InetAddress[] ips=InetAddress.getAllByName(domain); 
+    	if(ips.length>=1){
+    		return ips[0].getHostAddress();
+    	}else{
+    		return "";
+    	}
+    	
+    }
+	
+	获取Local ip
+	public static String getLocalIp() throws UnknownHostException, SocketException {
+		String host = null;
+		NetworkInterface iface = null;
+
+		for (Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces(); ifaces.hasMoreElements();) {
+			iface = (NetworkInterface) ifaces.nextElement();
+			InetAddress ia = null;
+			for (Enumeration<InetAddress> ips = iface.getInetAddresses(); ips.hasMoreElements();) {
+				ia = (InetAddress) ips.nextElement();
+				if (!ia.isLoopbackAddress() && (!ia.isLinkLocalAddress()) && (ia instanceof Inet4Address))
+					host = ia.getHostAddress();
+			}
+		}
+		Logger.debug(host);
+		return host;
+	}
+	是否中文
+private static boolean isChinese(char c) {
+		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+		if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+				|| ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B
+				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+				|| ub == Character.UnicodeBlock.GENERAL_PUNCTUATION) {
+			return true;
+		}
+		return false;
+	}
