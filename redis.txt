@@ -143,3 +143,21 @@ $redis->zInter('ko1', array('k1', 'k2'));// 集合k1和集合k2取交集于k01 ，且按照sc
 $redis->zInter('ko1', array('k1', 'k2'), array(5, 1));//集合k1和集合k2取交集于k01 ，array(5,1)中元素的个数与子集合对应，然后 5 对应k1，k1每个元素score都要乘以5 ，同理1对应k2，k2每个元素score乘以1，然后元素score按照递增排序，默认相同的元素score(SUM)相加
 $redis->zInter('ko1', array('k1', 'k2'), array(5, 1),'MAX');// 各个子集乘以因子之后，元素score按照递增排序，相同的元素score取最大值(MAX)。也可以设置MIN 取最小值
 复制代码
+
+
+
+
+local common_cmds = {
+    "get",      "set",          "mget",     "mset",
+    "del",      "incr",         "decr",                 -- Strings
+    "llen",     "lindex",       "lpop",     "lpush",
+    "lrange",   "linsert",                              -- Lists
+    "hexists",  "hget",         "hset",     "hmget",
+    --[[ "hmset", ]]            "hdel",                 -- Hashes
+    "smembers", "sismember",    "sadd",     "srem",
+    "sdiff",    "sinter",       "sunion",               -- Sets
+    "zrange",   "zrangebyscore", "zrank",   "zadd",
+    "zrem",     "zincrby",                              -- Sorted Sets
+    "auth",     "eval",         "expire",   "script",
+    "sort"                                              -- Others
+}
