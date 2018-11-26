@@ -1,4 +1,4 @@
-package com.test;
+package com.ymatou;
 
 
 import java.math.BigDecimal;
@@ -69,23 +69,23 @@ public class PoolFull {
 	}
 
 	/**
-	 * 单次最大增量 10 + 5 -12 ->单次15
-	 * 
 	 * @param IncreList
 	 * @return
 	 */
-	public Long getMaxIncre(List<Long> IncreList) {
+	public Long getMaxOneIncre(List<Long> IncreList) {
 		Long maxincre = 0l;
 		Long temp = 0l;
 		for (Long in : IncreList) {
 			temp = temp + in.longValue();
+			if(temp<0){
+				temp=0l;
+			}
 			if (temp > maxincre) {
 				maxincre = temp;
 			}
 		}
 		return maxincre;
 	}
-
 	/**
 	 * 残量 10 -15 1 -> 1
 	 * 
@@ -128,7 +128,7 @@ public class PoolFull {
 		Long oincre = IncreList.stream().mapToLong((num) -> num.longValue()).summaryStatistics().getSum();
 //		System.out.println("oincre:"+oincre);
 		// 负增长时 一次内可能达到的最大量
-		Long maxincre = getMaxIncre(IncreList);
+		Long maxincre = getMaxOneIncre(IncreList);
 //		System.out.println("maxincre:"+maxincre);
 		// 如果负增长
 		if (oincre <= 0 && maxincre < MinD.longValue()) {
@@ -234,5 +234,7 @@ public class PoolFull {
 		PoolFull.verifyEquals(-1d, PoolFull.getTime(pools), "null验证");
 		pools = Arrays.asList(null,1);
 		PoolFull.verifyEquals(-1d, PoolFull.getTime(pools), "包含null验证");
+		pools = Arrays.asList(-1,2,3,6);
+		PoolFull.verifyEquals(4d, PoolFull.getTime(pools), "第一次先放再满验证");
 	}
 }
