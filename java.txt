@@ -14,3 +14,5 @@ JAVA_OPTS=" -server \
             -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M \
             -Dsun.net.inetaddr.ttl=60 \
             -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/local/log/${APP_NAME}/heapdump.hprof"
+			
+jmap -dump:format=b,file=heap.hprof 25644
