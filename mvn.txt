@@ -17,6 +17,9 @@ mvn jar:jar
 mvn deploy
 
 ¥Ú”°“¿¿µ
+
+mvn dependency:copy-dependencies -DoutputDirectory=lib
+
 mvn dependency:resolve
 mvn dependency:tree
 
@@ -196,3 +199,4 @@ pom.xml
   <module>dao</module>
   </modules>
 </project>
+
