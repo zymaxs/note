@@ -16,3 +16,20 @@ JAVA_OPTS=" -server \
             -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/local/log/${APP_NAME}/heapdump.hprof"
 			
 jmap -dump:format=b,file=heap.hprof 25644
+
+
+–Ú¡–ªØ
+ public static void Serialize(Object o,String path) throws FileNotFoundException,
+            IOException {
+        ObjectOutputStream oo = new ObjectOutputStream(new FileOutputStream(
+                new File(path)));
+        oo.writeObject(o);
+        oo.close();
+    }
+
+    public static Object Deserialize(String path) throws Exception, IOException {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(
+                new File(path)));
+        Object o = ois.readObject();
+        return o;
+    }
