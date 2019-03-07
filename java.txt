@@ -33,3 +33,9 @@ jmap -dump:format=b,file=heap.hprof 25644
         Object o = ois.readObject();
         return o;
     }
+	
+apidoc
+npm install apidoc -g
+Winidow -> Preferences  ->  Java  ->Editor -> Templates
+µº»Î≈‰÷√xml
+help doc https://www.jianshu.com/p/9353d5cc1ef8
