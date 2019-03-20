@@ -39,3 +39,5 @@ npm install apidoc -g
 Winidow -> Preferences  ->  Java  ->Editor -> Templates
 导入配置xml
 help doc https://www.jianshu.com/p/9353d5cc1ef8
+gradle强制更新
+gradle clean release --refresh-dependencies
