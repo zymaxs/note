@@ -1,0 +1,18 @@
+systemctl stop firewalld.service
+安装named
+yum install bind-chroot bind-utils -y
+修改配置文件
+/etc/named.conf ——> 默认执行include named.rfc1912.zones
+
+/etc/named.rfc1912.zones 添加
+zone "domain.com" IN {
+        type slave;
+        file "slaves/domain.com.zone";
+        masters { 172.16.1.1; };
+};
+
+文件在 /var/named/slaves 下面
+
+执行
+systemctl restart named-chroot
+systemctl status named-chroot
