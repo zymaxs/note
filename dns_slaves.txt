@@ -1,4 +1,5 @@
 systemctl stop firewalld.service
+systemctl disable firewalld.service
 安装named
 yum install bind-chroot bind-utils -y
 修改配置文件
@@ -16,3 +17,17 @@ zone "domain.com" IN {
 执行
 systemctl restart named-chroot
 systemctl status named-chroot
+
+修改配置文件
+/etc/named.conf ——> 
+options {
+        //listen-on port 53 { 127.0.0.1; };
+        //listen-on-v6 port 53 { ::1; };
+        listen-on port 53 { any; };
+        directory       "/var/named";
+        dump-file       "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+        recursing-file  "/var/named/data/named.recursing";
+        secroots-file   "/var/named/data/named.secroots";
+        allow-query     { any; };
