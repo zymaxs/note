@@ -17,6 +17,7 @@ zone "domain.com" IN {
 执行
 systemctl restart named-chroot
 systemctl status named-chroot
+systemctl enable named-chroot
 
 修改配置文件
 /etc/named.conf ——> 
