@@ -38,3 +38,6 @@ rsync -avzp  --delete --password-file=/etc/rsyncd.password rsync_user@172.16.101
 
 crontab
 5/* * * * rsync -avzp  --delete --password-file=/etc/rsyncd.password rsync_user@172.16.101.12::nginx /usr/local/nginx/
+
+/usr/local/nginx/sbin/nginx -t
+/etc/init.d/rc.nginx start
