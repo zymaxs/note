@@ -1,0 +1,40 @@
+服务端安装
+yum install rsync
+/usr/bin/rsync --daemon --config=/etc/rsyncd.conf
+修改配置
+/etc/rsyncd.conf
+uid = root
+gid = root
+use chroot = no
+max connections = 200
+timeout = 300
+pid file = /var/run/rsyncd.pid
+lock file = /var/run/rsync.lock
+log file = /var/log/rsyncd.log
+secrets file = /etc/rsyncd.scrt
+[nginx]
+path = /usr/local/nginx/
+ignore errors
+read only = false
+list = false
+hosts allow = 172.16.101.28
+hosts deny = *
+auth users = rsync_user
+
+密码文件
+/etc/rsyncd.scrt
+rsync_user:123456
+
+和系统用户不要重复
+文件授权
+chmod 600 /etc/rsyncd.scrt
+
+客户端安装
+yum install rsync
+rsync -avzp  --delete --password-file=/etc/rsyncd.password rsync_user@172.16.101.12::nginx /usr/local/nginx/
+
+/etc/rsyncd.password 
+123456
+
+crontab
+5/* * * * rsync -avzp  --delete --password-file=/etc/rsyncd.password rsync_user@172.16.101.12::nginx /usr/local/nginx/
