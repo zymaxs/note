@@ -1,0 +1,12 @@
+免密
+client
+ssh-keygen -b 1024 -t rsa
+cd /root/.ssh
+download id_rsa id_rsa.pub
+
+server
+rename  id_rsa.pub to authorized_keys
+upload  authorized_keys to /root/.ssh
+
+client执行 配置备份到server的bakup199
+scp -rp /etc/nginx root@172.16.101.28:/usr/local/bakup199
