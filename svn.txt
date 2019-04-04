@@ -1,0 +1,66 @@
+svn同步服务器
+关闭防火墙
+systemctl stop firewalld.service
+systemctl disable firewalld.service 
+
+关闭se
+setenforce 0
+vim /etc/selinux/config
+SELINUX=disabled
+
+更换yum源
+cd /etc/yum.repos.d
+mv ./CentOS-Base.repo ./CentOS-Base.repo.bak
+wget http://mirrors.163.com/.help/CentOS7-Base-163.repo
+mv CentOS7-Base-163.repo /etc/yum.repos.d/CentOS-Base.repo
+yum clean all
+yum makecache
+
+安装httpd
+yum install httpd httpd-devel
+service httpd start
+chkconfig httpd on
+
+安装svn
+yum install mod_dav_svn subversion
+service httpd restart
+安装mod_dav_svn时候会默认httpd加载
+
+mkdir /svn
+从原服务器获取passwd.conf和authz文件复制到var/www目录
+
+创建配置 /etc/httpd/conf.d/svn.conf
+
+<Location /svn/>
+DAV svn
+SVNListParentPath on
+SVNParentPath /svn
+AuthType Basic
+AuthName "Subversionrepositories"
+AuthUserFile var/www/passwd.conf
+AuthzSVNAccessFile /var/www/authz
+Require valid-user
+</Location>
+RedirectMatch ^(/svn)$ $1/
+ 
+service httpd restart
+
+
+创建仓库
+cd /svn
+svnadmin create Testing （这应该改一个名字） 
+
+修改hooks
+vi pre-revprop-change
+#!/bin/sh
+exit 0
+
+修改权限
+chmod -R o+rw /svn    
+
+删除版本库数据-E22
+svn propdel svn:sync-lock --revprop -r 0 file:///svn/Testing
+
+同步svn
+svnsync init http://172.16.100.32/svn/Testing http://172.16.100.30/svn/Testing --username admin --password 123456
+svnsync sync http://172.16.100.32/svn/Testing
