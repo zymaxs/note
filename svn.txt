@@ -62,5 +62,5 @@ chmod -R o+rw /svn
 svn propdel svn:sync-lock --revprop -r 0 file:///svn/Testing
 
 同步svn
-svnsync init http://172.16.100.32/svn/Testing http://172.16.100.30/svn/Testing --username admin --password 123456
+svnsync init http://172.16.100.32/svn/Testing http://172.16.100.30/svn/Testing --username u --password p
 svnsync sync http://172.16.100.32/svn/Testing
