@@ -129,6 +129,9 @@ db.createUser( { "user" : "user","pwd":"pwd","roles":[{role:"readWrite",db:"db"}
 mongostat监控mongodb当前状态下的运行情况（使用mongo自带的监控工具mongostat）
 
 mongostat -usa   --authenticationDatabase admin
+
+mongostat -usa --authenticationDatabase admin  --port=27017 -p
+
 每个字段的含义：
  
 insert 每秒instert操作次数
@@ -202,3 +205,8 @@ mongodb索引操作
 创建复合索引：db.表名.ensureIndex({"co1":1,"co2":1})
 删除复合索引：db.表名.dropIndex({"co1":1,"co2":1})
 查询符合索引：db.table.getIndexes("复合索引名称")
+
+mongo监控
+开：db.setProfilingLevel(0)
+关：db.setProfilingLevel(2)
+查：db.system.profile.find().sort({ts:-1}).pretty()
