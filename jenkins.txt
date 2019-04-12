@@ -86,3 +86,17 @@ rpm -ql java-1.7.0-openjdk-1.7.0.45-2.4.3.3.el6.x86_64
 
 环境变量
 运行shell前运行：. /usr/usr_account/.profile (注意第一个点后面有空格)
+
+
+thinbackup备份
+下载插件 /root/.jenkins/plugins 备份插件 thinbackup (内网直接copy插件文件安装)
+备份目录
+Backup directory	/bakup
+每周一备份
+Backup schedule for full backups	H 12 * * 1
+设置备份选项
+Backup build results
+Backup build archive
+Backup plugins archives
+Move old backups to ZIP files
+Clean up differential backups
