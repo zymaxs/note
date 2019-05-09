@@ -41,3 +41,9 @@ Winidow -> Preferences  ->  Java  ->Editor -> Templates
 help doc https://www.jianshu.com/p/9353d5cc1ef8
 gradle强制更新
 gradle clean release --refresh-dependencies
+
+导入证书
+cd /usr/java/jdk1.8.0_91/jre/lib/security		
+keytool -import -alias globalsignrootca -keystore cacerts -file GlobalSignRootCA.cer -trustcacerts -storepass changeit
+keytool -list -keystore cacerts -storepass changeit	
+keytool -delete -alias globalsignrootca -keystore cacerts -storepass changeit	
