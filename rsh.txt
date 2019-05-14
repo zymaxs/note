@@ -1,0 +1,52 @@
+安装rsh
+yum install xinetd
+yum install rsh-server
+yum install rsh
+
+securetty添加用户
+cat /etc/securetty 
+rexec 
+rsh 
+rlogin
+
+修改配置
+cat /etc/xinetd.d/rsh
+service shell
+{
+	socket_type		= stream
+	wait			= no
+	user			= root
+	log_on_success		+= USERID
+	log_on_failure 		+= USERID
+	server			= /usr/sbin/in.rshd
+	disable			= no 
+}
+
+cat /etc/xinetd.d/rlogin 
+service login
+{
+	socket_type		= stream
+	wait			= no
+	user			= root
+	log_on_success		+= USERID
+	log_on_failure 		+= USERID
+	server			= /usr/sbin/in.rlogind
+	disable			= no 
+}
+
+cat /etc/xinetd.d/rexec 
+service exec
+{
+	socket_type		= stream
+	wait			= no
+	user			= root
+	log_on_success		+= USERID
+	log_on_failure 		+= USERID
+	server			= /usr/sbin/in.rexecd
+	disable 		= no 
+}
+
+配置免密ip
+cat /etc/hosts.equiv
+172.16.100.42
+172.16.100.43
