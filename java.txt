@@ -47,3 +47,26 @@ cd /usr/java/jdk1.8.0_91/jre/lib/security
 keytool -import -alias globalsignrootca -keystore cacerts -file GlobalSignRootCA.cer -trustcacerts -storepass changeit
 keytool -list -v -keystore cacerts -storepass changeit	
 keytool -delete -alias globalsignrootca -keystore cacerts -storepass changeit	
+
+
+#转换格式 .cer 到 .pem
+openssl x509 -inform der -in twca.cer  -out twca.pem
+
+#追加到信任列表
+cat twca.pem >> /etc/pki/tls/certs/ca-bundle.crt
+
+检查
+openssl s_client -connect sts.tencentcloudapi.com:443
+wget --no-check-certificate https://sts.tencentcloudapi.com
+
+？？
+yum install ca-certificates
+
+To add a certificate in the simple PEM or DER file formats to the list of CAs trusted on the system:
+1. add it as a new file to directory /etc/pki/ca-trust/source/anchors/
+2. update-ca-trust extract
+
+最终解决
+下载https://curl.haxx.se/ca/cacert.pem 重命名ca-bundle.crt 
+替换 /etc/pki/tls/certs/ca-bundle.crt 
+
