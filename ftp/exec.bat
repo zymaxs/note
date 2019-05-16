@@ -1,0 +1,1 @@
+cmd /c psexec \\ip -u administrator -p pwd cmd /c wusa file /quiet
