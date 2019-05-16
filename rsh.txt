@@ -50,3 +50,6 @@ service exec
 cat /etc/hosts.equiv
 172.16.100.42
 172.16.100.43
+
+重启服务
+service xinetd restart
