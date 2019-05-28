@@ -130,3 +130,7 @@ HugePages_Surp:        0
 Hugepagesize:       2048 kB
 DirectMap4k:       10232 kB
 DirectMap2M:      899072 kB
+
+ulimit -n 65000
+vi /etc/security/limits.conf 
+* - nofile 65000
