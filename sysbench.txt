@@ -1,0 +1,38 @@
+安装
+curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh | sudo bash
+sudo yum -y install sysbench
+
+准备
+sysbench --mysql-host=ip --mysql-port=port --mysql-user=username --mysql-password=pwd --mysql-db=log oltp_insert prepare
+测试
+sysbench --mysql-host=ip --mysql-port=port --mysql-user=username --mysql-password=pwd --mysql-db=log oltp_insert run
+清除
+sysbench --mysql-host=ip --mysql-port=port --mysql-user=username --mysql-password=pwd --mysql-db=log oltp_insert cleanup
+
+多线程测试
+sysbench --mysql-host=ip --mysql-port=port --mysql-user=username --mysql-password=pwd --mysql-db=log --threads=100 --time=30 --report-interval=1 --histogram=on oltp_insert run
+
+默认脚本
+ll /usr/share/sysbench/
+-rwxr-xr-x. 1 root root  1452 Mar 15 20:33 bulk_insert.lua
+-rw-r--r--. 1 root root 14369 Mar 15 20:33 oltp_common.lua
+-rwxr-xr-x. 1 root root  1290 Mar 15 20:33 oltp_delete.lua
+-rwxr-xr-x. 1 root root  2415 Mar 15 20:33 oltp_insert.lua
+-rwxr-xr-x. 1 root root  1265 Mar 15 20:33 oltp_point_select.lua
+-rwxr-xr-x. 1 root root  1649 Mar 15 20:33 oltp_read_only.lua
+-rwxr-xr-x. 1 root root  1824 Mar 15 20:33 oltp_read_write.lua
+-rwxr-xr-x. 1 root root  1118 Mar 15 20:33 oltp_update_index.lua
+-rwxr-xr-x. 1 root root  1127 Mar 15 20:33 oltp_update_non_index.lua
+-rwxr-xr-x. 1 root root  1440 Mar 15 20:33 oltp_write_only.lua
+-rwxr-xr-x. 1 root root  1919 Mar 15 20:33 select_random_points.lua
+-rwxr-xr-x. 1 root root  2118 Mar 15 20:33 select_random_ranges.lua
+说明
+1、只读操作，包含BETWEEN/SUM/ORDER BY/DISTINCT等操作	oltp_read_only.lua
+2、只读操作，条件为主键	oltp_point_select.lua
+3、纯写入操作	oltp_insert.lua
+4、批量写入	bulk_insert.lua
+5、更新操作，通过主键更新索引字段	oltp_update_index.lua
+6、更新操作，通过主键更新非索引字段	oltp_update_non_index.lua
+7、删除操作	oltp_delete.lua
+8、纯写操作，包括insert update delete	oltp_write_only.lua
+9、读写混合操作	oltp_read_write.lua
