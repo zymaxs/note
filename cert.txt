@@ -26,3 +26,7 @@ To add a certificate in the simple PEM or DER file formats to the list of CAs tr
 最终解决
 下载https://curl.haxx.se/ca/cacert.pem 重命名ca-bundle.crt 
 替换 /etc/pki/tls/certs/ca-bundle.crt 
+
+查看jre下的cacerts
+keytool -list -keystore cacerts
+changeit
