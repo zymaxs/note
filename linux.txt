@@ -1,3 +1,6 @@
+打印时间
+date '+%Y-%m-%d' -d  2019-01-01+1day   //2019-01-01的一天后 不输入为now
+
 查找n天前的并删除
 find . -mtime +5 -regex ".*com/[0-9]+" -exec rm -rf {} \;
 
