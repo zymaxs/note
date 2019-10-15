@@ -1,3 +1,11 @@
+判断浮点型数字大小
+if [ $(echo "$RUNTIME >= 3" | bc) = 1 ];
+then
+    echo ">=3"
+else
+	echo "<3"
+fi
+
 打印时间
 date '+%Y-%m-%d' -d  2019-01-01+1day   //2019-01-01的一天后 不输入为now
 date '+%Y-%m-%d %H:%M:%S'
