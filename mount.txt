@@ -1,0 +1,36 @@
+加挂硬盘
+--------------------------------------------
+
+加挂一块500g硬盘
+
+操作系统
+
+fdisk -l 查看
+
+Disk /dev/sdb: 536.9 GB, 536870912000 bytes
+
+fdisk /dev/sdb 分区
+
+n-p-1-enter-enter-w
+
+格式化
+
+mkfs -t ext3 /dev/sdb1
+
+挂载
+
+mount /dev/sdb1 /bak/
+
+设置开机挂载
+
+//vi /etc/rc.d/rc.local
+//mount /dev/sdb1 /bak/
+
+sudo vim /etc/fstab
+
+/dev/sdb1 /bak ext3 defaults 0 0
+
+
+/dev/sdb /data/data1 ext4 defaults 0 0
+
+ 
