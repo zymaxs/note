@@ -1,0 +1,30 @@
+安装插件SonarQube Scanner for Jenkins
+配置sonar服务： 
+系统管理--》系统设置
+配置serverurl 和token
+	token:我的账号-安全-Tokens
+设置sonar安装路径
+系统管理--》Global Tool Configuration -> sonarQube Scanner安装-自动安装
+
+job配置
+Execute SonarQube Scanner
+Analysis properties
+sonar.projectKey=domain
+sonar.projectName=domain
+sonar.projectVersion=1.0
+sonar.language=java 
+sonar.sources=.
+sonar.exclusions=
+sonar.sourceEncoding=UTF-8
+
+
+sonar 配置p3c
+1.编译jar
+git clone https://github.com/mrprince/sonar-p3c-pmd.git
+mvn package
+获得编译完成的jar
+2.加插件
+sonar-pmd-plugin-2.6.jar copy到sonar安装目录 extensions\plugins
+sh sonar.sh restart
+3.Config
+设置代码规则搜索p3c 修改规则可用
