@@ -1,3 +1,5 @@
 100.1
 kubectl get pod --all-namespaces -o wide | grep 10.96.143.139
 kubectl -n sit1 delete pod thridpartysync-iapi-ymatou-com-777f566db8-52xjl
+
+kubectl -n sit1 get deployment
