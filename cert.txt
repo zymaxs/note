@@ -30,3 +30,5 @@ To add a certificate in the simple PEM or DER file formats to the list of CAs tr
 查看jre下的cacerts
 keytool -list -keystore cacerts
 changeit
+
+后续 升级curl 
